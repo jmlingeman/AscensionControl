@@ -1,0 +1,30 @@
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\bin\Debug\AscensionControl.exe
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\bin\Debug\AscensionControl.pdb
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\ResolveAssemblyReference.cache
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.AddStudy.resources
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.MainInterface.resources
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.Properties.Resources.resources
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.read.1.tlog
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.write.1.tlog
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.exe
+\\vmware-host\Shared Folders\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.pdb
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.exe
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.pdb
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\bin\Debug\AscensionControl.exe
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\bin\Debug\AscensionControl.pdb
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.AddStudy.resources
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.MainInterface.resources
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.Properties.Resources.resources
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Jesse Lingeman\VS\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.exe
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.pdb
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\bin\Debug\AscensionControl.exe
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\bin\Debug\AscensionControl.pdb
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.AddStudy.resources
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.MainInterface.resources
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.Properties.Resources.resources
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.write.1.tlog

@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GetSynchronousRecordSample", "GetSynchronousRecordSample.vcxproj", "{293EB487-B5C2-32FE-7948-70367DC80AB5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		Template|Win32 = Template|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{293EB487-B5C2-32FE-7948-70367DC80AB5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{293EB487-B5C2-32FE-7948-70367DC80AB5}.Debug|Win32.Build.0 = Debug|Win32
+		{293EB487-B5C2-32FE-7948-70367DC80AB5}.Release|Win32.ActiveCfg = Release|Win32
+		{293EB487-B5C2-32FE-7948-70367DC80AB5}.Release|Win32.Build.0 = Release|Win32
+		{293EB487-B5C2-32FE-7948-70367DC80AB5}.Template|Win32.ActiveCfg = Template|Win32
+		{293EB487-B5C2-32FE-7948-70367DC80AB5}.Template|Win32.Build.0 = Template|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

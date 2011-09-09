@@ -1,0 +1,33 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "GetSynchronousRecordSample"=.\GetSynchronousRecordSample.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+    begin source code control
+    "$/PCIBird/Installation/CD_ROM_REV_B/GetSynchronousRecordSamples/GetSynchronousRecordSample", CXLAAAAA
+    l:\projects\pcibird\synced\deliverables\7 release\cdrom\cd_rom_rev_f\GetSynchronousRecordSamples\GetSynchronousRecordSample
+    end source code control
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+
