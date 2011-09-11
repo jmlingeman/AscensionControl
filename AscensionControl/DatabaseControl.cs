@@ -144,7 +144,10 @@ namespace AscensionControl
             {
                 subjects.Add(subject);
             }
-            return subjects;
+            ObservableCollection<Subject> subjectsSort = new ObservableCollection<Subject>(
+                subjects.OrderBy(subject => subject.id)
+                );
+            return subjectsSort;
         }
 
         public int GetSubjectIndex(Subject subject)
@@ -191,6 +194,9 @@ namespace AscensionControl
             {
                 sessions.Add(session);
             }
+            ObservableCollection<Session> sessionsSort = new ObservableCollection<Session>(
+                sessions.OrderBy(session => session.name)
+                );
             return sessions;
         }
 
@@ -236,6 +242,9 @@ namespace AscensionControl
             {
                 trials.Add(trial);
             }
+            ObservableCollection<Trial> trialsSort = new ObservableCollection<Trial>(
+                trials.OrderBy(trial => trial.name)
+                );
             return trials;
         }
 
@@ -281,6 +290,9 @@ namespace AscensionControl
             {
                 sensor_readings.Add(sr);
             }
+            ObservableCollection<SensorReading> sensor_readingsSort = new ObservableCollection<SensorReading>(
+                sensor_readings.OrderBy(s => s.recordnum)
+                );
             return sensor_readings;
         }
 
