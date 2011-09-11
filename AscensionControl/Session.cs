@@ -23,13 +23,18 @@ namespace AscensionControl
         public ObjectId _Id { get; set; }
         public string name;
         public string tdate;
-        public ObservableCollection<Trial> trials;
+        //public ObservableCollection<Trial> trials;
+        public Study study;
+        public Subject subject;
 
-        public Session(string name, string tdate)
+        public Session() { }
+        public Session(string name, string tdate, Study study, Subject subject)
         {
+            this.study = study;
+            this.subject = subject;
             this.name = name;
             this.tdate = tdate;
-            this.trials = new ObservableCollection<Trial>();
+            //this.trials = new ObservableCollection<Trial>();
         }
 
         public override string ToString()

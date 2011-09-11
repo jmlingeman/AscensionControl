@@ -55,6 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Session_PreMongo.cs" />
+    <Compile Include="Study_PreMongo.cs" />
+    <Compile Include="Subject_PreMongo.cs" />
+    <Compile Include="Trial_PreMongo.cs" />
     <Compile Include="DatabaseControl.cs" />
     <Compile Include="DataPoint.cs" />
     <Compile Include="AddStudy.cs">

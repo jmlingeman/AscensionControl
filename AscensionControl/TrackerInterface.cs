@@ -12,10 +12,15 @@ namespace AscensionControl
     public class TrackerInterface
     {
         public static long recordnum = 0;
+        public int init_error = 0;
 
         public TrackerInterface(float datarate)
         {
-            InitializeTrackerWrapper(datarate);
+            int ret = InitializeTrackerWrapper(datarate);
+            if (ret != 0)
+            {
+                init_error = -1;
+            }
         }
 
         [DllImport("TrackerWrapper.dll")]
@@ -102,11 +107,20 @@ namespace AscensionControl
         };
 
 
-        public static void InitializeTrackerWrapper(float datarate)
+        public static int InitializeTrackerWrapper(float datarate)
         {
             //IntPtr r = GetSyncRecord();
-            
-            InitializeTracker();
+
+            try
+            {
+                InitializeTracker();
+                return 0;
+            }
+            catch (Exception e)
+            {
+                
+                return -1;
+            }
             //System.Single clr_datarate = datarate;
             //SetRecordRate(clr_datarate);
             //Stopwatch sw = Stopwatch.StartNew();
@@ -131,7 +145,6 @@ namespace AscensionControl
             Record record = (Record)Marshal.PtrToStructure(r, typeof(Record));
 
             SensorReading sr = new SensorReading(recordnum, record);
-            
             recordnum++;
 
             return sr;

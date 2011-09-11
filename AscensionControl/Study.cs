@@ -19,14 +19,15 @@ namespace AscensionControl
     public class Study
     {
         [BsonId]
-        public ObjectId _id { get; set; }
+        public ObjectId _Id { get; set; }
         public string name;
-        public List<Subject> subjects;
+        //public List<Subject> subjects;
 
+        public Study() { }
         public Study(string name)
         {
             this.name = name;
-            this.subjects = new List<Subject>();
+            //this.subjects = new List<Subject>();
         }
 
         public override string ToString()

@@ -24,14 +24,17 @@ namespace AscensionControl
         public string id;
         public string bdate;
         public string gender;
-        public ObservableCollection<Session> sessions;
+        //public ObservableCollection<Session> sessions;
+        public Study study;
 
-        public Subject(string id, string bdate, string gender)
+        public Subject() { }
+        public Subject(string id, string bdate, string gender, Study study)
         {
+            this.study = study;
             this.id = id;
             this.bdate = bdate;
             this.gender = gender;
-            this.sessions = new ObservableCollection<Session>();
+            //this.sessions = new ObservableCollection<Session>();
         }
 
         public override string ToString()

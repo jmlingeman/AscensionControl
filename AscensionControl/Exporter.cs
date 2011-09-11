@@ -13,24 +13,24 @@ namespace AscensionControl
         {
         }
 
-        public void ExportStudyToCSV(Study study, string filename) 
+        public void ExportStudyToCSV(DatabaseControl db, Study study, string filename) 
         {
             string s = "";
             string header = "StudyName,SessionName,SessionDate,TrialName";
 
             for (int i = 0; i < 15; i++)
             {
-                header += string.Format("Sensor{0}.ID,Sensor{0}.X,Sensor{0}.Y,Sensor{0}.Z,Sensor{0}.Pitch,Sensor{0}.Roll,Sensor{0}.yaw,Sensor{0}.quality");
+                header += string.Format("Sensor{0}.ID,Sensor{0}.X,Sensor{0}.Y,Sensor{0}.Z,Sensor{0}.Pitch,Sensor{0}.Roll,Sensor{0}.yaw,Sensor{0}.quality", i);
             }
-            
-            foreach (Subject sub in study.subjects)
+
+            foreach (Subject sub in db.GetSubjects(study))
             {
-                foreach (Session sess in sub.sessions)
+                foreach (Session sess in db.GetSessions(sub))
                 {
-                    foreach (Trial trial in sess.trials)
+                    foreach (Trial trial in db.GetTrials(sess))
                     {
                         s += header + "\n";
-                        foreach (SensorReading pt in trial.data)
+                        foreach (SensorReading pt in db.GetSensorReadings(trial))
                         {
                             Sensor[] sensors = pt.sensors;
 

@@ -13,7 +13,6 @@ namespace AscensionControl
 {
     public partial class MainInterface : Form
     {
-        public static ObservableCollection<Study> studies = new ObservableCollection<Study>();
         public Study currentStudy;
         public Subject currentSubject;
         public Session currentSession;
@@ -31,18 +30,18 @@ namespace AscensionControl
 
             blankList = new List<bool>();
 
-            studies = database.Load();
-            currentStudy = new Study("init");
-            studyDisplay.DataSource = studies;
+            //studies = database.Load();
+            currentStudy = new Study();
+            studyDisplay.DataSource = database.GetStudies();
 
-            currentSubject = new Subject("init", "init", "init");
-            subjectDisplay.DataSource = currentStudy.subjects;
+            currentSubject = new Subject();
+            //subjectDisplay.DataSource = currentStudy.subjects;
 
-            currentSession = new Session("init", "init");
-            sessionDisplay.DataSource = currentSubject.sessions;
+            currentSession = new Session();
+            //sessionDisplay.DataSource = currentSubject.sessions;
 
-            currentTrial = new Trial("init", "init");
-            trialDisplay.DataSource = currentSession.trials;
+            currentTrial = new Trial();
+            //trialDisplay.DataSource = currentSession.trials;
 
             
             
@@ -63,29 +62,7 @@ namespace AscensionControl
 
         }
 
-        private void addNewStudy_Click(object sender, EventArgs e)
-        {
-            string value = "";
-            DialogResult result = MainInterface.InputBox("New Study", "New study name:", ref value);
-            if ( result == DialogResult.OK && value != "")
-            {
-                currentStudy = new Study(value);
-                studies.Add(currentStudy);
 
-                studyDisplay.DataSource = null;
-                studyDisplay.DataSource = studies;
-                studyDisplay.ClearSelected();
-                studyDisplay.SetSelected(studies.IndexOf(currentStudy), true);
-
-                Console.WriteLine(value);
-                database.Save();
-            }
-            else if (result == DialogResult.OK)
-            {
-                MessageBox.Show("Invalid study name.");
-            }
-
-        }
 
 
 
@@ -255,11 +232,11 @@ namespace AscensionControl
             }
             else
             {
-                currentStudy = studies[studyDisplay.SelectedIndex];
+                currentStudy = database.GetStudies()[studyDisplay.SelectedIndex];
                 Console.WriteLine(currentStudy.ToString());
 
                 // Refresh the data windows
-                subjectDisplay.DataSource = currentStudy.subjects;
+                subjectDisplay.DataSource = database.GetSubjects(currentStudy);
                 ((CurrencyManager)subjectDisplay.BindingContext[subjectDisplay.DataSource]).Refresh();
                 subjectDisplay.ClearSelected();
 
@@ -285,12 +262,12 @@ namespace AscensionControl
 
                 if (result == DialogResult.Yes)
                 {
-                    currentStudy = studies[studyDisplay.SelectedIndex];
-                    studies.Remove(currentStudy);
+                    currentStudy = database.GetStudies()[studyDisplay.SelectedIndex];
+                    database.RemoveStudy(currentStudy);
                     currentStudy = null;
 
                     studyDisplay.DataSource = null;
-                    studyDisplay.DataSource = studies;
+                    studyDisplay.DataSource = database.GetStudies();
                 }
             }
         }
@@ -304,16 +281,14 @@ namespace AscensionControl
                 DialogResult result = MainInterface.InputBox3("New Subject", "New Subject ID:", "New Subject Birthdate:", "New Subject Gender:", ref values);
                 if (result == DialogResult.OK && values.Count > 0)
                 {
-                    Subject s = new Subject(values[0], values[1], values[2]);
-                    currentStudy.subjects.Add(s);
+                    Subject s = new Subject(values[0], values[1], values[2], currentStudy);
+                    database.AddSubject(s);
 
                     subjectDisplay.DataSource = null;
-                    subjectDisplay.DataSource = currentStudy.subjects;
+                    subjectDisplay.DataSource = database.GetSubjects(currentStudy);
                     subjectDisplay.ClearSelected();
-                    subjectDisplay.SetSelected(currentStudy.subjects.IndexOf(s), true);
+                    subjectDisplay.SetSelected(database.GetSubjectIndex(s), true);
 
-                    Console.WriteLine(values);
-                    database.Save();
                 }
                 else if (result == DialogResult.OK)
                 {
@@ -330,12 +305,12 @@ namespace AscensionControl
 
                 if (result == DialogResult.Yes)
                 {
-                    currentSubject = currentStudy.subjects[subjectDisplay.SelectedIndex];
-                    currentStudy.subjects.Remove(currentSubject);
+                    currentSubject = database.GetSubjects(currentStudy)[subjectDisplay.SelectedIndex];
+                    database.RemoveSubject(currentSubject);
                     currentSubject = null;
 
                     subjectDisplay.DataSource = null;
-                    subjectDisplay.DataSource = currentStudy.subjects;
+                    subjectDisplay.DataSource = database.GetSubjects(currentStudy);
                 }
             }
         }
@@ -343,8 +318,13 @@ namespace AscensionControl
         private void loadTracker_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Attempting to start tracker...");
-            trackerinterface = new TrackerInterface(6.0f);
-            recorder = new Recorder();
+            trackerinterface = new TrackerInterface(80.0f);
+            if (trackerinterface.init_error != 0)
+            {
+                MessageBox.Show("ERROR: Could not initialize tracker.  Is tracker plugged in and turned on?");
+                return;
+            }
+            recorder = new Recorder(database);
             Console.WriteLine("Tracker initialized");
             startButton.Enabled = true;
             loadTracker.Enabled = false;
@@ -380,6 +360,48 @@ namespace AscensionControl
         private void nextTrial_Click(object sender, EventArgs e)
         {
             // Make a new trial and start adding to that.  No interruption can be allowed here.
+            string curr_name = currentTrial.name;
+            int numVal;
+            try
+            {
+                numVal = Convert.ToInt32(curr_name);
+                Trial t = new Trial(Convert.ToString(numVal + 1), DateTime.Now.ToString("H:mm:ss"), currentStudy, currentSubject, currentSession);
+                database.AddTrial(t);
+
+                trialDisplay.DataSource = null;
+                trialDisplay.DataSource = database.GetTrials(currentSession);
+                trialDisplay.ClearSelected();
+                trialDisplay.SetSelected(database.GetTrialIndex(t), true);
+
+                recorder.NextTrial(t);
+            }
+            catch (FormatException exp)
+            {
+                MessageBox.Show("Trial name is not numeric.");
+                Console.WriteLine("Input string is not a sequence of digits.");
+            }
+        }
+
+        private void addNewStudy_Click(object sender, EventArgs e)
+        {
+            string value = "";
+            DialogResult result = MainInterface.InputBox("New Study", "New study name:", ref value);
+            if (result == DialogResult.OK && value != "")
+            {
+                currentStudy = new Study(value);
+                database.AddStudy(currentStudy);
+
+                studyDisplay.DataSource = null;
+                studyDisplay.DataSource = database.GetStudies();
+                studyDisplay.ClearSelected();
+                Console.WriteLine(database.GetStudies());
+                studyDisplay.SetSelected(database.GetStudyIndex(currentStudy), true);
+            }
+            else if (result == DialogResult.OK)
+            {
+                MessageBox.Show("Invalid study name.");
+            }
+
         }
 
         private void addNewSession_Click(object sender, EventArgs e)
@@ -390,35 +412,35 @@ namespace AscensionControl
                 DialogResult result = MainInterface.InputBox("Create New Session", "Session Name:", ref value);
                 if (result == DialogResult.OK)
                 {
-                    Session s = new Session(value, DateTime.Now.ToString("M/d/yyyy"));
-                    currentSubject.sessions.Add(s);
+                    Session s = new Session(value, DateTime.Now.ToString("M/d/yyyy"), currentStudy, currentSubject);
+                    database.AddSession(s);
 
                     sessionDisplay.DataSource = null;
-                    sessionDisplay.DataSource = currentSubject.sessions;
+                    sessionDisplay.DataSource = database.GetSessions(currentSubject);
                     ((CurrencyManager)sessionDisplay.BindingContext[sessionDisplay.DataSource]).Refresh();
                     sessionDisplay.ClearSelected();
-                    sessionDisplay.SetSelected(currentSubject.sessions.IndexOf(s), true);
+                    sessionDisplay.SetSelected(database.GetSessionIndex(s), true);
 
                     Console.WriteLine(value);
-                    database.Save();
                 }
             }
         }
 
         private void removeSession_Click(object sender, EventArgs e)
         {
+            Console.WriteLine(sessionDisplay.SelectedIndex);
             if (sessionDisplay.SelectedIndex > -1)
             {
                 DialogResult result = MessageBox.Show("Are you sure you want to delete this session?", "Remove Session", MessageBoxButtons.YesNo);
 
                 if (result == DialogResult.Yes)
                 {
-                    currentSession = currentSubject.sessions[sessionDisplay.SelectedIndex];
-                    currentSubject.sessions.Remove(currentSession);
+                    currentSession = database.GetSessions(currentSubject)[sessionDisplay.SelectedIndex];
+                    database.RemoveSession(currentSession);
                     currentSession = null;
 
                     sessionDisplay.DataSource = null;
-                    sessionDisplay.DataSource = currentSubject.sessions;
+                    sessionDisplay.DataSource = database.GetSessions(currentSubject);
                 }
             }
         }
@@ -431,16 +453,14 @@ namespace AscensionControl
                 DialogResult result = MainInterface.InputBox("Create New Trial", "Trial Name:", ref value);
                 if (result == DialogResult.OK)
                 {
-                    Trial t = new Trial(value, DateTime.Now.ToString("H:mm:ss"));
-                    currentSession.trials.Add(t);
+                    Trial t = new Trial(value, DateTime.Now.ToString("H:mm:ss"), currentStudy, currentSubject, currentSession);
+                    database.AddTrial(t);
 
                     trialDisplay.DataSource = null;
-                    trialDisplay.DataSource = currentSession.trials;
+                    trialDisplay.DataSource = database.GetTrials(currentSession);
                     trialDisplay.ClearSelected();
-                    trialDisplay.SetSelected(currentSession.trials.IndexOf(t), true);
+                    trialDisplay.SetSelected(database.GetTrialIndex(t), true);
 
-                    Console.WriteLine(value);
-                    database.Save();
                 }
             }
         }
@@ -453,13 +473,10 @@ namespace AscensionControl
 
                 if (result == DialogResult.Yes)
                 {
-                    currentTrial = currentSession.trials[trialDisplay.SelectedIndex];
-                    currentSession.trials.Remove(currentTrial);
-                    currentSession = null;
-
+                    database.RemoveTrial(currentTrial);
+                    currentTrial = null;
                     trialDisplay.DataSource = null;
-                    trialDisplay.DataSource = currentSession.trials;
-                    database.Save();
+                    trialDisplay.DataSource = database.GetTrials(currentSession);
                 }
             }
         }
@@ -473,12 +490,12 @@ namespace AscensionControl
             }
             else
             {
-                currentSubject = currentStudy.subjects[subjectDisplay.SelectedIndex];
+                currentSubject = database.GetSubjects(currentStudy)[subjectDisplay.SelectedIndex];
                 Console.WriteLine(currentStudy.ToString());
 
                 // Refresh the data windows
                 sessionDisplay.DataSource = null;
-                sessionDisplay.DataSource = currentSubject.sessions;
+                sessionDisplay.DataSource = database.GetSessions(currentSubject);
                 //((CurrencyManager)sessionDisplay.BindingContext[sessionDisplay.DataSource]).Refresh();
                 sessionDisplay.ClearSelected();
 
@@ -498,11 +515,11 @@ namespace AscensionControl
             }
             else
             {
-                currentSession = currentSubject.sessions[sessionDisplay.SelectedIndex];
+                currentSession = database.GetSessions(currentSubject)[sessionDisplay.SelectedIndex];
                 Console.WriteLine(currentSession.ToString());
 
                 // Refresh the data windows
-                trialDisplay.DataSource = currentSession.trials;
+                trialDisplay.DataSource = database.GetTrials(currentSession);
                 ((CurrencyManager)trialDisplay.BindingContext[trialDisplay.DataSource]).Refresh();
                 trialDisplay.ClearSelected();
                 //trialDisplay.DataSource = null;
@@ -519,18 +536,13 @@ namespace AscensionControl
             }
             else
             {
-                currentTrial = currentSession.trials[trialDisplay.SelectedIndex];
+                currentTrial = database.GetTrials(currentSession)[trialDisplay.SelectedIndex];
                 Console.WriteLine(currentTrial.ToString());
-                Console.WriteLine("This trial contains {0} frames of data!", currentTrial.data.Count);
+                Console.WriteLine("This trial contains {0} frames of data!", database.GetSensorReadings(currentTrial).Count);
 
             }
         }
 
-        private void MainInterface_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            database.Save();
-        }
-        
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
             if (Control.IsKeyLocked(Keys.CapsLock))
@@ -547,15 +559,27 @@ namespace AscensionControl
 
         private void getSensors_Click(object sender, EventArgs e)
         {
-            sensorInfo.Text = currentTrial.data.ElementAt(currentTrial.data.Count - 1).ToString();
+           // sensorInfo.Text = currentTrial.data.ElementAt(currentTrial.data.Count - 1).ToString();
         }
 
         private void ExportStudyButton_Click(object sender, EventArgs e)
         {
-            Exporter exporter = new Exporter();
-            exporter.ExportStudyToCSV( currentStudy,
-                Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Printout.csv" );
+            SaveFileDialog sp = new SaveFileDialog();
+            sp.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            if (sp.ShowDialog() == DialogResult.OK)
+            {
+                Exporter exporter = new Exporter();
+                Console.WriteLine(sp.FileName);
+                exporter.ExportStudyToCSV(database, currentStudy, sp.FileName);
+            }
         }
+
+        private void MainInterface_FormClosed(object sender, FormClosedEventArgs e)
+        {
+        }
+
+
 
 
 

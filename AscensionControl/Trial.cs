@@ -23,13 +23,19 @@ namespace AscensionControl
         [BsonId]
         public ObjectId _Id { get; set; }
         public string name;
-        public ConcurrentQueue<SensorReading> data;
+        //public ConcurrentQueue<SensorReading> data;
+        public Study study;
+        public Subject subject;
+        public Session session;
 
-        public Trial(string name, string time)
+        public Trial() { }
+        public Trial(string name, string time, Study study, Subject subject, Session session)
         {
-
+            this.study = study;
+            this.subject = subject;
+            this.session = session;
             this.name = name;
-            this.data = new ConcurrentQueue<SensorReading>();
+            //this.data = new ConcurrentQueue<SensorReading>();
         }
 
         public override string ToString()

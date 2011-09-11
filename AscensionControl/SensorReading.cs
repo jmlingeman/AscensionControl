@@ -61,6 +61,14 @@ namespace AscensionControl
             }
         }
 
+        public void SetTrial(Trial trial)
+        {
+            this.trial = trial;
+            this.session = trial.session;
+            this.subject = session.subject;
+            this.study = session.study;
+        }
+
         public SensorReading(long recordnum, TrackerInterface.Record rec)
         {
             sensors = new Sensor[32];

@@ -13,9 +13,12 @@ namespace AscensionControl
         public bool running = false;
         ConcurrentQueue<SensorReading> data;
         TrackerInterface tracker;
+        DatabaseControl database;
+        Trial trial;
 
-        public Recorder()
+        public Recorder(DatabaseControl database)
         {
+            this.database = database;
             this.running = false;
         }
 
@@ -23,7 +26,7 @@ namespace AscensionControl
         {
             this.tracker = tracker;
 
-            this.data = trial.data;
+            this.trial = trial;
 
             this.running = true;
 
@@ -48,13 +51,15 @@ namespace AscensionControl
             while (running == true)
             {
                 rec = tracker.GetRecord();
+                rec.SetTrial(trial);
 
                 if (MainInterface.caps_switch == 1)
                 {
                     rec.caps_switch = 1;
                 }
                 
-                data.Enqueue(rec);
+                
+                database.AddSensorReading(rec);
             }
         }
 
@@ -73,6 +78,11 @@ namespace AscensionControl
         {
             this.running = false;
             Console.WriteLine("STOPPED, recorded {0} frames!", data.Count);
+        }
+
+        public void NextTrial(Trial trial)
+        {
+            this.trial = trial;
         }
     }
 }
