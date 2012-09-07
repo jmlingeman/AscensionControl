@@ -1,0 +1,15 @@
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\bin\Release\AscensionControl.exe.manifest
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\bin\Release\AscensionControl.application
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\bin\Release\AscensionControl.exe
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\bin\Release\AscensionControl.pdb
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\ResolveAssemblyReference.cache
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\AscensionControl.AddStudy.resources
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\AscensionControl.ExportingProgress.resources
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\AscensionControl.MainInterface.resources
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\AscensionControl.Properties.Resources.resources
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\GenerateResource.read.1.tlog
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\GenerateResource.write.1.tlog
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\AscensionControl.exe.manifest
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\AscensionControl.application
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\AscensionControl.exe
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Release\AscensionControl.pdb

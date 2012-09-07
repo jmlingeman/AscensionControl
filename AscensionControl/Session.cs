@@ -26,6 +26,10 @@ namespace AscensionControl
         //public ObservableCollection<Trial> trials;
         public Study study;
         public Subject subject;
+        public double sync1_on;
+        public double sync1_off;
+        public double sync2_on;
+        public double sync2_off;
 
         public Session() { }
         public Session(string name, string tdate, Study study, Subject subject)
@@ -34,7 +38,58 @@ namespace AscensionControl
             this.subject = subject;
             this.name = name;
             this.tdate = tdate;
+            this.sync1_on = -1;
+            this.sync1_off = -1;
+            this.sync2_on = -1;
+            this.sync2_off = -1;
             //this.trials = new ObservableCollection<Trial>();
+        }
+
+        public void ResetSync()
+        {
+            this.sync1_on = -1;
+            this.sync1_off = -1;
+            this.sync2_off = -1;
+            this.sync2_on = -1;
+        }
+
+        public void SetSync(double time, bool on) 
+        {
+            if (on == true)
+            {
+                if (this.sync1_on == -1)
+                {
+                    this.sync1_on = time;
+                }
+                else if (this.sync2_on == -1)
+                {
+                    this.sync2_on = time;
+                }
+                else
+                {
+                    this.sync1_on = -1;
+                    this.sync2_on = -1;
+                }
+            }
+            else if (on == false)
+            {
+                if (this.sync1_off == -1)
+                {
+                    this.sync1_off = time;
+                }
+                else if (this.sync2_off == -1)
+                {
+                    this.sync2_off = time;
+                }
+                else
+                {
+                    this.sync1_off = -1;
+                    this.sync2_off = -1;
+                }
+            }
+            Console.WriteLine(this.sync1_on);
+
+
         }
 
         public override string ToString()

@@ -20,7 +20,7 @@ struct RECORD {
 RECORD* rec;
 
 extern "C" {
-    __declspec(dllexport) void __cdecl InitializeTracker();
+    __declspec(dllexport) void __cdecl InitializeTracker(double* rate, double* range);
 }
 
 extern "C" {
@@ -34,7 +34,8 @@ extern "C" {
 extern void __cdecl GetSystemConfiguration(void);
 extern void __cdecl GetSensorConfig(void);
 extern void __cdecl GetTransmitterConfig(void);
-extern void __cdecl SetRecordRate(float rate);
+extern void __cdecl SetRecordRate(double rate);
+extern void __cdecl SetMaximumRange(double range);
 extern void __cdecl EnableTransmitter(void);
 
 	
@@ -63,7 +64,7 @@ void errorHandler(int error) {
 	}
 }
 
-extern void __cdecl InitializeTracker() {
+extern void __cdecl InitializeTracker(double* rate, double* range) {
 	printf("Initializing ATC3DG system...\n");
 	
 	printf("Record size: %d", sizeof(RECORD));
@@ -106,13 +107,18 @@ extern void __cdecl InitializeTracker() {
 	GetSensorConfig();
 	GetTransmitterConfig();
 
-	SetRecordRate(80.0);
+	SetRecordRate(*rate);
+	SetMaximumRange(*range);
+
+	bool metric = true;
+	SetSystemParameter(METRIC, &metric, sizeof(metric));
+
 	EnableTransmitter();
 
 	// Set the data format type for each attached sensor.
 	for(i=0;i<PCIBird.m_config.numberSensors;i++)
 	{
-		DATA_FORMAT_TYPE type = DOUBLE_POSITION_ANGLES_TIME_Q;
+		DATA_FORMAT_TYPE type = DOUBLE_POSITION_ANGLES_TIME_Q_BUTTON;
 		errorCode = SetSensorParameter(i,DATA_FORMAT,&type,sizeof(type));
 		if(errorCode!=BIRD_ERROR_SUCCESS) errorHandler(errorCode);
 	}
@@ -145,8 +151,24 @@ extern void __cdecl GetTransmitterConfig(void) {
 	}
 }
 
+extern void __cdecl SetMaximumRange(double range) {
+	errorCode = SetSystemParameter(MAXIMUM_RANGE, &range, sizeof(range));
+	if(errorCode!=BIRD_ERROR_SUCCESS) errorHandler(errorCode);
+}
+
 extern void __cdecl SetRecordRate(double rate) {
 	errorCode = SetSystemParameter(MEASUREMENT_RATE, &rate, sizeof(rate));
+	if(errorCode!=BIRD_ERROR_SUCCESS) errorHandler(errorCode);
+}
+
+extern void __cdecl SetAGC(double agc_val) {
+	AGC_MODE_TYPE agc;
+	if(agc_val == 0)
+		agc = SENSOR_AGC_ONLY;
+	else
+		agc = TRANSMITTER_AND_SENSOR_AGC;
+
+	errorCode = SetSystemParameter(AGC_MODE, &agc, sizeof(agc));
 	if(errorCode!=BIRD_ERROR_SUCCESS) errorHandler(errorCode);
 }
 
@@ -260,10 +282,10 @@ void FillRecord(DOUBLE_POSITION_ANGLES_TIME_Q_BUTTON_RECORD* pRecord) {
 			rec->active[sensorID] = 1;
 			rec->x[sensorID] = record[sensorID].x;
 			rec->y[sensorID] = record[sensorID].y;
-			rec->z[sensorID] = record[sensorID].y;
+			rec->z[sensorID] = record[sensorID].z;
 			rec->pitch[sensorID] = record[sensorID].e;
-			rec->roll[sensorID] = record[sensorID].a;
-			rec->yaw[sensorID] = record[sensorID].r;
+			rec->roll[sensorID] = record[sensorID].r;
+			rec->yaw[sensorID] = record[sensorID].a;
 			rec->time[sensorID] = record[sensorID].time;
 			rec->quality[sensorID] = record[sensorID].quality;
 			rec->button[sensorID] = record[sensorID].button;

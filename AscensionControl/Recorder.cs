@@ -15,6 +15,7 @@ namespace AscensionControl
         TrackerInterface tracker;
         DatabaseControl database;
         Trial trial;
+        public double current_time;
 
         public Recorder(DatabaseControl database)
         {
@@ -57,8 +58,8 @@ namespace AscensionControl
                 {
                     rec.caps_switch = 1;
                 }
-                
-                
+
+                current_time = rec.sensors.ElementAt(0).time;
                 database.AddSensorReading(rec);
             }
         }
@@ -77,7 +78,7 @@ namespace AscensionControl
         public void Stop()
         {
             this.running = false;
-            Console.WriteLine("STOPPED, recorded {0} frames!", data.Count);
+            Console.WriteLine("STOPPED!");
         }
 
         public void NextTrial(Trial trial)

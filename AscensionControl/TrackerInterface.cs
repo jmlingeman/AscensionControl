@@ -13,10 +13,12 @@ namespace AscensionControl
     {
         public static long recordnum = 0;
         public int init_error = 0;
+        MainInterface m;
 
-        public TrackerInterface(float datarate)
+        public TrackerInterface(double datarate, double maxrange, MainInterface m)
         {
-            int ret = InitializeTrackerWrapper(datarate);
+            this.m = m;
+            int ret = InitializeTrackerWrapper(datarate, maxrange);
             if (ret != 0)
             {
                 init_error = -1;
@@ -26,8 +28,8 @@ namespace AscensionControl
         [DllImport("TrackerWrapper.dll")]
         public static extern IntPtr GetSyncRecord();
 
-        [DllImport("TrackerWrapper.dll")]
-        public static extern void InitializeTracker();
+        [DllImport("TrackerWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void InitializeTracker(ref double rate, ref double range);
 
         [DllImport("TrackerWrapper.dll")]
         public static extern void GetSystemConfiguration();
@@ -107,18 +109,17 @@ namespace AscensionControl
         };
 
 
-        public static int InitializeTrackerWrapper(float datarate)
+        public static int InitializeTrackerWrapper(double datarate, double maxrange)
         {
-            //IntPtr r = GetSyncRecord();
 
             try
             {
-                InitializeTracker();
+                InitializeTracker(ref datarate, ref maxrange);
                 return 0;
             }
             catch (Exception e)
             {
-                
+                Console.WriteLine(e.ToString());
                 return -1;
             }
             //System.Single clr_datarate = datarate;
@@ -146,6 +147,27 @@ namespace AscensionControl
 
             SensorReading sr = new SensorReading(recordnum, record);
             recordnum++;
+            Boolean sync;
+            if (sr.sensors[0].button == 0)
+            {
+                sync = false;
+            }
+            else
+            {
+                sync = true;
+            }
+
+            if (recordnum % 20 == 0 && sr != null)
+            {
+                m.sensorInfo.Invoke(new MainInterface.UpdateSensorInfoCallBack(m.UpdateSensorInfo), 
+            new object[]{sr.ToString()});
+
+                m.qualityChart.Invoke(new MainInterface.UpdateQualityChartInfoCallBack(m.UpdateQualityChart),
+                    new object[] {sr.GetActiveSensors(), sr.GetQualityScores()});
+
+                m.syncstatus.Invoke(new MainInterface.UpdateSyncInfoCallBack(m.UpdateSyncInfo),
+                    new object[] { sync });
+            }
 
             return sr;
         }

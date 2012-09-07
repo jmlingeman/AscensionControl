@@ -28,3 +28,33 @@ C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionC
 C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.Properties.Resources.resources
 C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Jesse\Documents\Visual Studio 2010\Projects\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.write.1.tlog
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\bin\Debug\AscensionControl.exe.manifest
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\bin\Debug\AscensionControl.application
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\bin\Debug\AscensionControl.exe
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\bin\Debug\AscensionControl.pdb
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\ResolveAssemblyReference.cache
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.AddStudy.resources
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.ExportingProgress.resources
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.MainInterface.resources
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.Properties.Resources.resources
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.read.1.tlog
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.write.1.tlog
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.exe.manifest
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.application
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.exe
+\\vmware-host\Shared Folders\Desktop\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.pdb
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\bin\Debug\AscensionControl.exe.manifest
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\bin\Debug\AscensionControl.application
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\bin\Debug\AscensionControl.exe
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\bin\Debug\AscensionControl.pdb
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\ResolveAssemblyReference.cache
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.AddStudy.resources
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.ExportingProgress.resources
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.MainInterface.resources
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.Properties.Resources.resources
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.read.1.tlog
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\GenerateResource.write.1.tlog
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.exe.manifest
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.application
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.exe
+Z:\jesse On My Mac\Workspace\ActionLab\AscensionControl\AscensionControl\obj\x86\Debug\AscensionControl.pdb

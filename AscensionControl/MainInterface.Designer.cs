@@ -28,12 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.loadTracker = new System.Windows.Forms.Button();
             this.unloadTracker = new System.Windows.Forms.Button();
             this.studyDisplay = new System.Windows.Forms.ListBox();
@@ -46,19 +43,22 @@
             this.removeStudy = new System.Windows.Forms.Button();
             this.addNewSubject = new System.Windows.Forms.Button();
             this.removeSubject = new System.Windows.Forms.Button();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.qualityChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.nextTrial = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.removeTrial = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabcontrol = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.exportSubjectButton = new System.Windows.Forms.Button();
+            this.exportSubjectByTrialButton = new System.Windows.Forms.Button();
+            this.exportStudyOneFileButton = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.radiusSettings = new System.Windows.Forms.ComboBox();
+            this.samplingFreq = new System.Windows.Forms.TextBox();
+            this.syncstatus = new System.Windows.Forms.Button();
             this.ExportStudyButton = new System.Windows.Forms.Button();
             this.getSensors = new System.Windows.Forms.Button();
             this.sensorInfo = new System.Windows.Forms.RichTextBox();
@@ -70,17 +70,19 @@
             this.addNewSession = new System.Windows.Forms.Button();
             this.removeSession = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
-            this.tabControl1.SuspendLayout();
+            this.updateOldTimestampsButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.qualityChart)).BeginInit();
+            this.tabcontrol.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // loadTracker
             // 
-            this.loadTracker.Location = new System.Drawing.Point(6, 6);
+            this.loadTracker.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.loadTracker.Location = new System.Drawing.Point(565, 372);
             this.loadTracker.Name = "loadTracker";
-            this.loadTracker.Size = new System.Drawing.Size(114, 23);
+            this.loadTracker.Size = new System.Drawing.Size(168, 53);
             this.loadTracker.TabIndex = 0;
             this.loadTracker.Text = "Load Tracker";
             this.loadTracker.UseVisualStyleBackColor = true;
@@ -89,12 +91,14 @@
             // unloadTracker
             // 
             this.unloadTracker.Enabled = false;
-            this.unloadTracker.Location = new System.Drawing.Point(134, 6);
+            this.unloadTracker.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.unloadTracker.Location = new System.Drawing.Point(565, 629);
             this.unloadTracker.Name = "unloadTracker";
-            this.unloadTracker.Size = new System.Drawing.Size(112, 23);
+            this.unloadTracker.Size = new System.Drawing.Size(168, 54);
             this.unloadTracker.TabIndex = 1;
             this.unloadTracker.Text = "Unload Tracker";
             this.unloadTracker.UseVisualStyleBackColor = true;
+            this.unloadTracker.Click += new System.EventHandler(this.unloadTracker_Click);
             // 
             // studyDisplay
             // 
@@ -108,9 +112,10 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 32);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(7, 28);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 13);
+            this.label1.Size = new System.Drawing.Size(45, 18);
             this.label1.TabIndex = 3;
             this.label1.Text = "Study";
             this.label1.Click += new System.EventHandler(this.label1_Click);
@@ -127,9 +132,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(135, 32);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(135, 28);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.Size = new System.Drawing.Size(57, 18);
             this.label2.TabIndex = 5;
             this.label2.Text = "Subject";
             // 
@@ -145,9 +151,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(387, 32);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(387, 28);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(27, 13);
+            this.label3.Size = new System.Drawing.Size(36, 18);
             this.label3.TabIndex = 7;
             this.label3.Text = "Trial";
             // 
@@ -191,66 +198,37 @@
             this.removeSubject.UseVisualStyleBackColor = true;
             this.removeSubject.Click += new System.EventHandler(this.removeSubject_Click);
             // 
-            // chart1
+            // qualityChart
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart1.Legends.Add(legend3);
-            this.chart1.Location = new System.Drawing.Point(964, 48);
-            this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(443, 421);
-            this.chart1.TabIndex = 12;
-            this.chart1.Text = "chart1";
-            // 
-            // chart2
-            // 
-            chartArea4.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea4);
-            legend4.Name = "Legend1";
-            this.chart2.Legends.Add(legend4);
-            this.chart2.Location = new System.Drawing.Point(965, 475);
-            this.chart2.Name = "chart2";
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.chart2.Series.Add(series4);
-            this.chart2.Size = new System.Drawing.Size(443, 156);
-            this.chart2.TabIndex = 13;
-            this.chart2.Text = "chart2";
+            this.qualityChart.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.TopBottom;
+            chartArea1.AxisY.Maximum = 15000D;
+            chartArea1.AxisY.Minimum = 0D;
+            chartArea1.Name = "ChartArea1";
+            this.qualityChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.qualityChart.Legends.Add(legend1);
+            this.qualityChart.Location = new System.Drawing.Point(739, 49);
+            this.qualityChart.Name = "qualityChart";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.qualityChart.Series.Add(series1);
+            this.qualityChart.Size = new System.Drawing.Size(443, 321);
+            this.qualityChart.TabIndex = 13;
+            this.qualityChart.Text = "chart2";
             // 
             // nextTrial
             // 
-            this.nextTrial.BackColor = System.Drawing.Color.DodgerBlue;
+            this.nextTrial.BackColor = System.Drawing.Color.DarkGray;
             this.nextTrial.Enabled = false;
             this.nextTrial.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nextTrial.Location = new System.Drawing.Point(1239, 637);
+            this.nextTrial.Location = new System.Drawing.Point(565, 563);
             this.nextTrial.Name = "nextTrial";
             this.nextTrial.Size = new System.Drawing.Size(168, 60);
             this.nextTrial.TabIndex = 14;
             this.nextTrial.Text = "Next Trial";
             this.nextTrial.UseVisualStyleBackColor = false;
             this.nextTrial.Click += new System.EventHandler(this.nextTrial_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(1134, 673);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 15;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1134, 654);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(83, 13);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "Next Trial Name";
             // 
             // removeTrial
             // 
@@ -265,9 +243,10 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(987, 459);
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(877, 42);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 13);
+            this.label5.Size = new System.Drawing.Size(125, 20);
             this.label5.TabIndex = 18;
             this.label5.Text = "Quality Numbers";
             this.label5.Click += new System.EventHandler(this.label5_Click);
@@ -281,21 +260,27 @@
             this.label7.TabIndex = 21;
             this.label7.Text = "Sensor Information";
             // 
-            // tabControl1
+            // tabcontrol
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(2, 1);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1422, 729);
-            this.tabControl1.TabIndex = 22;
+            this.tabcontrol.Controls.Add(this.tabPage1);
+            this.tabcontrol.Controls.Add(this.tabPage2);
+            this.tabcontrol.Location = new System.Drawing.Point(2, 1);
+            this.tabcontrol.Name = "tabcontrol";
+            this.tabcontrol.SelectedIndex = 0;
+            this.tabcontrol.Size = new System.Drawing.Size(1169, 729);
+            this.tabcontrol.TabIndex = 22;
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.button4);
-            this.tabPage1.Controls.Add(this.button3);
-            this.tabPage1.Controls.Add(this.button2);
+            this.tabPage1.Controls.Add(this.exportSubjectButton);
+            this.tabPage1.Controls.Add(this.exportSubjectByTrialButton);
+            this.tabPage1.Controls.Add(this.exportStudyOneFileButton);
+            this.tabPage1.Controls.Add(this.label10);
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.radiusSettings);
+            this.tabPage1.Controls.Add(this.samplingFreq);
+            this.tabPage1.Controls.Add(this.syncstatus);
             this.tabPage1.Controls.Add(this.ExportStudyButton);
             this.tabPage1.Controls.Add(this.getSensors);
             this.tabPage1.Controls.Add(this.sensorInfo);
@@ -307,11 +292,8 @@
             this.tabPage1.Controls.Add(this.addNewSession);
             this.tabPage1.Controls.Add(this.removeSession);
             this.tabPage1.Controls.Add(this.label5);
-            this.tabPage1.Controls.Add(this.chart1);
-            this.tabPage1.Controls.Add(this.chart2);
+            this.tabPage1.Controls.Add(this.qualityChart);
             this.tabPage1.Controls.Add(this.nextTrial);
-            this.tabPage1.Controls.Add(this.label4);
-            this.tabPage1.Controls.Add(this.textBox1);
             this.tabPage1.Controls.Add(this.trialDisplay);
             this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.studyDisplay);
@@ -329,49 +311,113 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1414, 703);
+            this.tabPage1.Size = new System.Drawing.Size(1161, 703);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.Text = "Controller";
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
-            // button4
+            // exportSubjectButton
             // 
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(786, 207);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(168, 47);
-            this.button4.TabIndex = 34;
-            this.button4.Text = "Export Current Trial";
-            this.button4.UseVisualStyleBackColor = true;
+            this.exportSubjectButton.Location = new System.Drawing.Point(565, 101);
+            this.exportSubjectButton.Name = "exportSubjectButton";
+            this.exportSubjectButton.Size = new System.Drawing.Size(168, 47);
+            this.exportSubjectButton.TabIndex = 49;
+            this.exportSubjectButton.Text = "Export Subject";
+            this.exportSubjectButton.UseVisualStyleBackColor = true;
+            this.exportSubjectButton.Click += new System.EventHandler(this.exportSubjectButton_Click);
             // 
-            // button3
+            // exportSubjectByTrialButton
             // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(786, 154);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(168, 47);
-            this.button3.TabIndex = 33;
-            this.button3.Text = "Export Current Session";
-            this.button3.UseVisualStyleBackColor = true;
+            this.exportSubjectByTrialButton.Location = new System.Drawing.Point(565, 228);
+            this.exportSubjectByTrialButton.Name = "exportSubjectByTrialButton";
+            this.exportSubjectByTrialButton.Size = new System.Drawing.Size(168, 47);
+            this.exportSubjectByTrialButton.TabIndex = 48;
+            this.exportSubjectByTrialButton.Text = "Export Subject by Trial";
+            this.exportSubjectByTrialButton.UseVisualStyleBackColor = true;
+            this.exportSubjectByTrialButton.Click += new System.EventHandler(this.exportSubjectByTrialButton_Click);
             // 
-            // button2
+            // exportStudyOneFileButton
             // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(786, 101);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(168, 47);
-            this.button2.TabIndex = 32;
-            this.button2.Text = "Export Current Subject";
-            this.button2.UseVisualStyleBackColor = true;
+            this.exportStudyOneFileButton.Location = new System.Drawing.Point(565, 48);
+            this.exportStudyOneFileButton.Name = "exportStudyOneFileButton";
+            this.exportStudyOneFileButton.Size = new System.Drawing.Size(168, 47);
+            this.exportStudyOneFileButton.TabIndex = 47;
+            this.exportStudyOneFileButton.Text = "Export Study";
+            this.exportStudyOneFileButton.UseVisualStyleBackColor = true;
+            this.exportStudyOneFileButton.Click += new System.EventHandler(this.exportStudyOneFileButton_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(763, 386);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(331, 13);
+            this.label10.TabIndex = 46;
+            this.label10.Text = "NOTE: These settings may only be set when the tracker is unloaded.";
+            this.label10.Click += new System.EventHandler(this.label10_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(760, 454);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(316, 13);
+            this.label11.TabIndex = 45;
+            this.label11.Text = "Tracker Radius in inches.  144 setting is only for large transmittor. ";
+            this.label11.Click += new System.EventHandler(this.label11_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(763, 406);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(288, 13);
+            this.label9.TabIndex = 44;
+            this.label9.Text = "Update Frequency (Hz).  Range: 60.0 - 720.0.  Default 240.";
+            this.label9.Click += new System.EventHandler(this.label9_Click);
+            // 
+            // radiusSettings
+            // 
+            this.radiusSettings.DisplayMember = "36";
+            this.radiusSettings.FormattingEnabled = true;
+            this.radiusSettings.Items.AddRange(new object[] {
+            "36",
+            "72",
+            "144"});
+            this.radiusSettings.Location = new System.Drawing.Point(763, 470);
+            this.radiusSettings.Name = "radiusSettings";
+            this.radiusSettings.Size = new System.Drawing.Size(121, 21);
+            this.radiusSettings.TabIndex = 43;
+            this.radiusSettings.SelectedIndexChanged += new System.EventHandler(this.radiusSettings_SelectedIndexChanged);
+            // 
+            // samplingFreq
+            // 
+            this.samplingFreq.Location = new System.Drawing.Point(763, 422);
+            this.samplingFreq.Name = "samplingFreq";
+            this.samplingFreq.Size = new System.Drawing.Size(121, 20);
+            this.samplingFreq.TabIndex = 42;
+            this.samplingFreq.Text = "240";
+            this.samplingFreq.TextChanged += new System.EventHandler(this.samplingFreq_TextChanged);
+            // 
+            // syncstatus
+            // 
+            this.syncstatus.BackColor = System.Drawing.Color.Red;
+            this.syncstatus.Enabled = false;
+            this.syncstatus.Location = new System.Drawing.Point(565, 288);
+            this.syncstatus.Name = "syncstatus";
+            this.syncstatus.Size = new System.Drawing.Size(168, 54);
+            this.syncstatus.TabIndex = 41;
+            this.syncstatus.Text = "Sync Status";
+            this.syncstatus.UseVisualStyleBackColor = false;
             // 
             // ExportStudyButton
             // 
-            this.ExportStudyButton.Location = new System.Drawing.Point(786, 48);
+            this.ExportStudyButton.Location = new System.Drawing.Point(565, 175);
             this.ExportStudyButton.Name = "ExportStudyButton";
             this.ExportStudyButton.Size = new System.Drawing.Size(168, 47);
             this.ExportStudyButton.TabIndex = 31;
-            this.ExportStudyButton.Text = "Export Current Study";
+            this.ExportStudyButton.Text = "Export Study by Trial";
             this.ExportStudyButton.UseVisualStyleBackColor = true;
             this.ExportStudyButton.Click += new System.EventHandler(this.ExportStudyButton_Click);
             // 
@@ -405,10 +451,10 @@
             // 
             // startButton
             // 
-            this.startButton.BackColor = System.Drawing.Color.YellowGreen;
+            this.startButton.BackColor = System.Drawing.Color.DarkGray;
             this.startButton.Enabled = false;
             this.startButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startButton.Location = new System.Drawing.Point(786, 633);
+            this.startButton.Location = new System.Drawing.Point(565, 431);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(168, 60);
             this.startButton.TabIndex = 27;
@@ -418,10 +464,10 @@
             // 
             // stopButton
             // 
-            this.stopButton.BackColor = System.Drawing.Color.Red;
+            this.stopButton.BackColor = System.Drawing.Color.DarkGray;
             this.stopButton.Enabled = false;
             this.stopButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.stopButton.Location = new System.Drawing.Point(960, 633);
+            this.stopButton.Location = new System.Drawing.Point(565, 497);
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(168, 60);
             this.stopButton.TabIndex = 26;
@@ -441,9 +487,10 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(261, 32);
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(261, 28);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(44, 13);
+            this.label6.Size = new System.Drawing.Size(62, 18);
             this.label6.TabIndex = 23;
             this.label6.Text = "Session";
             // 
@@ -469,30 +516,41 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.updateOldTimestampsButton);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1414, 703);
+            this.tabPage2.Size = new System.Drawing.Size(1161, 703);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "Options";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // updateOldTimestampsButton
+            // 
+            this.updateOldTimestampsButton.Location = new System.Drawing.Point(39, 156);
+            this.updateOldTimestampsButton.Name = "updateOldTimestampsButton";
+            this.updateOldTimestampsButton.Size = new System.Drawing.Size(134, 23);
+            this.updateOldTimestampsButton.TabIndex = 7;
+            this.updateOldTimestampsButton.Text = "Update Old Timestamps";
+            this.updateOldTimestampsButton.UseVisualStyleBackColor = true;
+            this.updateOldTimestampsButton.Click += new System.EventHandler(this.updateOldTimestampsButton_Click);
             // 
             // MainInterface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1425, 728);
-            this.Controls.Add(this.tabControl1);
+            this.ClientSize = new System.Drawing.Size(1171, 728);
+            this.Controls.Add(this.tabcontrol);
             this.KeyPreview = true;
             this.Name = "MainInterface";
             this.Text = "AscensionControl";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainInterface_FormClosed);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownHandler);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
-            this.tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.qualityChart)).EndInit();
+            this.tabcontrol.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -511,15 +569,11 @@
         private System.Windows.Forms.Button removeStudy;
         private System.Windows.Forms.Button addNewSubject;
         private System.Windows.Forms.Button removeSubject;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.Button nextTrial;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button removeTrial;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tabcontrol;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ListBox sessionDisplay;
@@ -529,12 +583,20 @@
         private System.Windows.Forms.Button startButton;
         private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.Button addTrial;
-        private System.Windows.Forms.RichTextBox sensorInfo;
         private System.Windows.Forms.Button getSensors;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button ExportStudyButton;
+        public System.Windows.Forms.RichTextBox sensorInfo;
+        public System.Windows.Forms.DataVisualization.Charting.Chart qualityChart;
+        private System.Windows.Forms.Button updateOldTimestampsButton;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox radiusSettings;
+        private System.Windows.Forms.TextBox samplingFreq;
+        public System.Windows.Forms.Button syncstatus;
+        private System.Windows.Forms.Button exportStudyOneFileButton;
+        private System.Windows.Forms.Button exportSubjectButton;
+        private System.Windows.Forms.Button exportSubjectByTrialButton;
     }
 }
 

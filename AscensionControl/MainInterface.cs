@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.ObjectModel;
+using System.Windows.Forms.DataVisualization.Charting;
+using System.Threading;
 
 namespace AscensionControl
 {
@@ -22,11 +24,16 @@ namespace AscensionControl
         public List<bool> blankList;
         public DatabaseControl database;
         public static int caps_switch;
+        public static Exporter exporter = new Exporter();
+        BackgroundWorker bw = new BackgroundWorker();
+                
 
         public MainInterface()
         {
             InitializeComponent();
             database = new DatabaseControl();
+            bw.WorkerSupportsCancellation = true;
+            bw.WorkerReportsProgress = true;
 
             blankList = new List<bool>();
 
@@ -43,6 +50,9 @@ namespace AscensionControl
             currentTrial = new Trial();
             //trialDisplay.DataSource = currentSession.trials;
 
+            radiusSettings.SelectedIndex = 1;
+
+            this.Refresh();
             
             
         }
@@ -318,10 +328,11 @@ namespace AscensionControl
         private void loadTracker_Click(object sender, EventArgs e)
         {
             Console.WriteLine("Attempting to start tracker...");
-            trackerinterface = new TrackerInterface(80.0f);
+            trackerinterface = new TrackerInterface(Convert.ToDouble(samplingFreq.Text) / 3.0, Convert.ToDouble(radiusSettings.SelectedValue), this);
             if (trackerinterface.init_error != 0)
             {
                 MessageBox.Show("ERROR: Could not initialize tracker.  Is tracker plugged in and turned on?");
+                Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
                 return;
             }
             recorder = new Recorder(database);
@@ -329,6 +340,27 @@ namespace AscensionControl
             startButton.Enabled = true;
             loadTracker.Enabled = false;
             unloadTracker.Enabled = true;
+            samplingFreq.Enabled = false;
+            radiusSettings.Enabled = false;
+
+            startButton.BackColor = Color.Green;
+            stopButton.BackColor = Color.DarkGray;
+            nextTrial.BackColor = Color.DarkGray;
+        }
+
+        private void unloadTracker_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("Shutting down tracker...");
+            trackerinterface = null;
+            recorder = null;
+            startButton.Enabled = false;
+            startButton.BackColor = Color.DarkGray;
+            stopButton.BackColor = Color.DarkGray;
+            nextTrial.BackColor = Color.DarkGray;
+            loadTracker.Enabled = true;
+            unloadTracker.Enabled = false;
+            samplingFreq.Enabled = true;
+            radiusSettings.Enabled = true;
         }
 
         private void startButton_Click(object sender, EventArgs e)
@@ -343,6 +375,10 @@ namespace AscensionControl
             startButton.Enabled = false;
             stopButton.Enabled = true;
             nextTrial.Enabled = true;
+            nextTrial.BackColor = Color.CadetBlue;
+            ExportStudyButton.Enabled = false;
+            startButton.BackColor = Color.DarkGray;
+            stopButton.BackColor = Color.Red;
         }
 
         private void stopButton_Click(object sender, EventArgs e)
@@ -352,7 +388,12 @@ namespace AscensionControl
 
             stopButton.Enabled = false;
             startButton.Enabled = true;
+            startButton.BackColor = Color.Green;
+            stopButton.BackColor = Color.DarkGray;
             nextTrial.Enabled = false;
+            nextTrial.BackColor = Color.DarkGray;
+            
+            ExportStudyButton.Enabled = true;
 
             // Now save, just in case!
         }
@@ -516,7 +557,6 @@ namespace AscensionControl
             else
             {
                 currentSession = database.GetSessions(currentSubject)[sessionDisplay.SelectedIndex];
-                Console.WriteLine(currentSession.ToString());
 
                 // Refresh the data windows
                 trialDisplay.DataSource = database.GetTrials(currentSession);
@@ -538,23 +578,14 @@ namespace AscensionControl
             {
                 currentTrial = database.GetTrials(currentSession)[trialDisplay.SelectedIndex];
                 Console.WriteLine(currentTrial.ToString());
-                Console.WriteLine("This trial contains {0} frames of data!", database.GetSensorReadings(currentTrial).Count);
+                //Console.WriteLine("This trial contains {0} frames of data!", database.GetSensorReadings(currentTrial).Count);
 
             }
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
-            if (Control.IsKeyLocked(Keys.CapsLock))
-            {
-                caps_switch = 1;
-                Console.WriteLine("CAPS ON");
-            }
-            else
-            {
-                caps_switch = 0;
-                Console.WriteLine("CAPS OFF");
-            }
+
         }
 
         private void getSensors_Click(object sender, EventArgs e)
@@ -562,22 +593,241 @@ namespace AscensionControl
            // sensorInfo.Text = currentTrial.data.ElementAt(currentTrial.data.Count - 1).ToString();
         }
 
+        public void UpdateSensorInfo(string text)
+        {
+            sensorInfo.Text = text;
+        }
+
+        public delegate void UpdateSensorInfoCallBack(string text);
+
+        public delegate void UpdateSyncInfoCallBack(Boolean sync);
+
+        public delegate void UpdateQualityChartInfoCallBack(List<string> seriesArray, List<int> qualityArray);
+
+        public void UpdateSyncInfo(Boolean sync)
+        {
+            if (sync)
+            {
+                syncstatus.BackColor = Color.Green;
+            }
+            else
+            {
+                syncstatus.BackColor = Color.Red;
+            }
+        }
+        public void UpdateQualityChart(List<string> seriesArray, List<int> qualityArray )
+        {
+            qualityChart.Series.Clear();
+            for (int i = 0; i < seriesArray.Count; i++)
+            {
+                Series series = qualityChart.Series.Add(seriesArray.ElementAt(i));
+                series.Points.Add(qualityArray.ElementAt(i));
+            }
+        }
+
         private void ExportStudyButton_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sp = new SaveFileDialog();
-            sp.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            FolderBrowserDialog sp = new FolderBrowserDialog();
+            sp.RootFolder = Environment.SpecialFolder.Desktop;
 
             if (sp.ShowDialog() == DialogResult.OK)
             {
-                Exporter exporter = new Exporter();
-                Console.WriteLine(sp.FileName);
-                exporter.ExportStudyToCSV(database, currentStudy, sp.FileName);
+                // TODO: Commit task to BGWOrker
+                ExportingProgress ep = new ExportingProgress();
+                ep.Show();
+
+                bw.DoWork += (_sender, _e) => _e.Result = runExportStudyByTrial(database, currentStudy, sp.SelectedPath);
+
+                bw.RunWorkerAsync();
+                //exporter.ExportSubjectToCSVOneFile(database, currentStudy, currentSubject, sp.FileName);
+                while (bw.IsBusy)
+                {
+                    Thread.Sleep(100);
+                    ep.currentFileLabel.Text = exporter.status;
+                    ep.exportProgressBar.Update();
+                    ep.exportProgressBar.Value = exporter.percent;
+                    ep.Update();
+                    Application.DoEvents();
+                }
+                ep.Hide();
             }
         }
+
+        private void exportStudyOneFileButton_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sp = new SaveFileDialog();
+            sp.InitialDirectory = Environment.SpecialFolder.Desktop.ToString();
+            sp.Filter = "CSV File|*.csv";
+            sp.Title = "Save study as one file.";
+
+
+            if (sp.ShowDialog() == DialogResult.OK)
+            {
+                // TODO: Commit task to BGWOrker
+                ExportingProgress ep = new ExportingProgress();
+                ep.Show();
+
+                bw.DoWork += (_sender, _e) => _e.Result = runExportStudy(database, currentStudy, sp.FileName);
+
+                bw.RunWorkerAsync();
+                //exporter.ExportSubjectToCSVOneFile(database, currentStudy, currentSubject, sp.FileName);
+                while (bw.IsBusy)
+                {
+                    Thread.Sleep(100);
+
+                    ep.exportProgressBar.Value = exporter.percent;
+                    ep.currentFileLabel.Text = exporter.status;
+                    ep.exportProgressBar.Update();
+                    ep.Update();
+                    Application.DoEvents();
+                }
+                ep.Hide();
+            }
+        }
+
+        private void exportSubjectByTrialButton_Click(object sender, EventArgs e)
+        {
+            if(currentSubject != null) 
+            {
+                FolderBrowserDialog sp = new FolderBrowserDialog();
+                sp.RootFolder = Environment.SpecialFolder.Desktop;
+
+
+                if (sp.ShowDialog() == DialogResult.OK)
+                {
+                    // TODO: Commit task to BGWOrker
+                    ExportingProgress ep = new ExportingProgress();
+                    ep.Show();
+                    ep.exportProgressBar.Style = ProgressBarStyle.Continuous;
+
+                    bw.DoWork += (_sender, _e) => _e.Result = runExportSubjectByTrial(database, currentStudy, currentSubject, sp.SelectedPath);
+
+                    bw.RunWorkerAsync();
+                    //exporter.ExportSubjectToCSVOneFile(database, currentStudy, currentSubject, sp.FileName);
+                    while (bw.IsBusy)
+                    {
+                        Thread.Sleep(100);
+                        ep.currentFileLabel.Text = exporter.status;
+                        ep.exportProgressBar.Value = exporter.percent;
+                        ep.exportProgressBar.Update();
+                        ep.Update();
+                        Application.DoEvents();
+                    }
+                    ep.Hide();
+                }
+            }
+        }
+
+        private void exportSubjectButton_Click(object sender, EventArgs e)
+        {
+            if (currentSubject != null)
+            {
+                SaveFileDialog sp = new SaveFileDialog();
+                sp.InitialDirectory = Environment.SpecialFolder.Desktop.ToString();
+                sp.Filter = "CSV File|*.csv";
+                sp.Title = "Save study as one file.";
+
+
+                if (sp.ShowDialog() == DialogResult.OK)
+                {
+                    // TODO: Commit task to BGWOrker
+                    ExportingProgress ep = new ExportingProgress();
+                    ep.Show();
+
+                    bw.DoWork += (_sender, _e) => _e.Result = runExportSubject(database, currentStudy, currentSubject, sp.FileName);
+
+                    bw.RunWorkerAsync();
+                    //exporter.ExportSubjectToCSVOneFile(database, currentStudy, currentSubject, sp.FileName);
+                    while (bw.IsBusy)
+                    {
+                        Thread.Sleep(100);
+                        ep.currentFileLabel.Text = exporter.status;
+                        ep.exportProgressBar.Value = exporter.percent;
+                        ep.exportProgressBar.Update();
+                        ep.Update();
+                        Application.DoEvents();
+                    }
+                    ep.Hide();
+                }
+            }
+        }
+
+        public Exporter runExportStudy(DatabaseControl database, Study currentStudy, String filename)
+        {
+            Thread.Sleep(100);
+            exporter.ExportStudyToCSVOneFile(database, currentStudy, filename);
+            return exporter;
+        }
+
+        public Exporter runExportStudyByTrial(DatabaseControl database, Study currentStudy, String directory)
+        {
+            Thread.Sleep(100);
+            exporter.ExportStudyToMultipleFiles(database, currentStudy, directory);
+            return exporter;
+        }
+
+        public Exporter runExportSubject(DatabaseControl database, Study currentStudy, Subject currentSubject, String filename)
+        {
+            Thread.Sleep(100);
+            exporter.ExportSubjectToCSVOneFile(database, currentStudy, currentSubject, filename);
+            return exporter;
+        }
+
+        public Exporter runExportSubjectByTrial(DatabaseControl database, Study currentStudy, Subject currentSubject, String directory)
+        {
+            Thread.Sleep(100);
+            exporter.ExportSubjectToMultipleFiles(database, currentStudy, currentSubject, directory);
+            return exporter;
+        }
+
 
         private void MainInterface_FormClosed(object sender, FormClosedEventArgs e)
         {
         }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void updateOldTimestampsButton_Click(object sender, EventArgs e)
+        {
+            ExportingProgress ep = new ExportingProgress();
+            ep.Show();
+            database.updateTimestamps();
+            ep.Hide();
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void radiusSettings_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void samplingFreq_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+
+
+
 
 
 

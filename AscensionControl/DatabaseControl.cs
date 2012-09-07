@@ -30,11 +30,12 @@ namespace AscensionControl
         MongoCollection<Session> session_collection;
         MongoCollection<Trial> trial_collection;
         MongoCollection<SensorReading> sensor_readings_collection;
+        System.IO.StreamWriter logfile;
 
         public DatabaseControl() 
         {
             // Connect to MongoDB
-            this.server = MongoServer.Create("mongodb://localhost/");
+            this.server = MongoServer.Create("mongodb://localhost/?socketTimeoutMS=300000");
             Console.WriteLine("Connection to MongoDB successful");
             this.database = server.GetDatabase("ascension");
             this.sensor_readings_collection = this.database.GetCollection<SensorReading>("sensorreadings");
@@ -43,6 +44,12 @@ namespace AscensionControl
             this.session_collection = this.database.GetCollection<Session>("sessions");
             this.trial_collection = this.database.GetCollection<Trial>("trials");
 
+            // For printing
+            this.sensor_readings_collection.EnsureIndex("study._id", "subject._id", "session._id", "trial._id", "time");
+
+            // For deleting
+            this.sensor_readings_collection.EnsureIndex("study._id", "subject._id", "session._id", "trial._id");
+
             //ConvertDB("AscensionControl.dat");
             Console.WriteLine("Getting study from DB");
             ObservableCollection<Study> studies = GetStudies();
@@ -50,7 +57,30 @@ namespace AscensionControl
             {
                 Console.WriteLine(study.name);
             }
-            //Console.WriteLine("Finished.");
+
+            string header = "StudyName,SubjectID,SessionName,SessionDate,TrialName,SessionSync1.Onset,SessionSync1.Offset,SessionSync2.Onset,SessionSync2.Offset,";
+
+            for (int i = 0; i < 16; i++)
+            {
+                header += string.Format("Sensor{0}.ID,Sensor{0}.Time,Sensor{0}.Switch,Sensor{0}.X,Sensor{0}.Y,Sensor{0}.Z,Sensor{0}.Pitch,Sensor{0}.Roll,Sensor{0}.yaw,Sensor{0}.quality,", i);
+            }
+            Console.WriteLine(header);
+
+            Console.WriteLine("OPENING LOG FILE");
+            if(!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\AscensionLog")) {
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\AscensionLog");
+            }
+            string folderpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\AscensionLog\\";
+            string filepath = ("AscensionLog-" + DateTime.Now.ToShortDateString() + "-" + DateTime.Now.ToShortTimeString() + ".csv").Replace(":","_").Replace("/","-");
+            Console.WriteLine(filepath);
+                logfile = new System.IO.StreamWriter(folderpath + filepath);
+                logfile.WriteLine(header);
+                Console.WriteLine("CREATED LOG FILE.");
+            
+
+            //Console.WriteLine("UPDATING TIMESTAMPS...");
+            //updateTimestamps();
+            //Console.WriteLine("FINISHED UPDATING TIMESTAMPS.");
         }
 
         //public void ConvertDB(string filename)
@@ -230,6 +260,11 @@ namespace AscensionControl
             sensor_readings_collection.Remove(query);
         }
 
+        public void UpdateSession(Session s)
+        {
+            session_collection.Save(s);
+        }
+
         public ObservableCollection<Trial> GetTrials(Session session)
         {
             ObservableCollection<Trial> trials = new ObservableCollection<Trial>();
@@ -267,17 +302,19 @@ namespace AscensionControl
             trial_collection.Insert(t);
         }
 
-        public void RemoveTrial(Trial s)
+        public void RemoveTrial(Trial trial)
         {
-            var query = Query.Or(
-                Query.EQ("_id", s._Id),
-                Query.EQ("trial._id", s._Id)
+            var query = Query.And(
+                Query.EQ("study._id", trial.study._Id),
+                Query.EQ("subject._id", trial.subject._Id),
+                Query.EQ("session._id", trial.session._Id),
+                Query.EQ("trial._id", trial._Id)
                 );
             trial_collection.Remove(query);
             sensor_readings_collection.Remove(query);
         }
 
-        public ObservableCollection<SensorReading> GetSensorReadings(Trial trial)
+        public MongoCursor<SensorReading> GetSensorReadings(Trial trial)
         {
             ObservableCollection<SensorReading> sensor_readings = new ObservableCollection<SensorReading>();
             var query = Query.And(
@@ -286,18 +323,47 @@ namespace AscensionControl
                 Query.EQ("session._id", trial.session._Id),
                 Query.EQ("trial._id", trial._Id)
                 );
-            foreach (SensorReading sr in sensor_readings_collection.Find(query))
-            {
-                sensor_readings.Add(sr);
-            }
-            ObservableCollection<SensorReading> sensor_readingsSort = new ObservableCollection<SensorReading>(
-                sensor_readings.OrderBy(s => s.recordnum)
-                );
-            return sensor_readings;
+
+            Console.WriteLine("Getting sensor readings");
+            return sensor_readings_collection.Find(query).SetSortOrder(SortBy.Ascending("time"));
+            //foreach (SensorReading sr in sensor_readings_collection.Find(query))
+            //{
+            //    sensor_readings.Add(sr);
+            //}
+            //ObservableCollection<SensorReading> sensor_readingsSort = new ObservableCollection<SensorReading>(
+            //    sensor_readings.OrderBy(s => s.recordnum)
+            //    );
+            //return sensor_readings;
         }
 
         public void AddSensorReading(SensorReading s)
         {
+            
+
+            Sensor[] sensors = s.sensors;
+            Study study = s.study;
+            Subject sub = s.subject;
+            Session sess = s.session;
+            Trial trial = s.trial;
+
+            // Append study/sub/sess/trial data
+            logfile.Write(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", study.name, sub.id, sess.name, sess.tdate, trial.name, sess.sync1_on, sess.sync1_off, sess.sync2_on, sess.sync2_off));
+            for (int i = 0; i < sensors.Length; i++)
+            {
+                if (sensors[i].active == 1)
+                {
+                    // Append sensor data whether sensor is active or not
+                    logfile.Write(string.Format(",{0},{9},{1},{2:0.00},{3:0.00},{4:0.00},{5:0.00},{6:0.00},{7:0.00},{8}",
+                        i, sensors[i].button, sensors[i].x, sensors[i].y, sensors[i].z, sensors[i].pitch, sensors[i].roll, sensors[i].yaw, sensors[i].quality, sensors[i].time));
+                }
+                else
+                {
+                    // If the sensor wasn't active then append a blank filler
+                    logfile.Write(",,,,,,,,,,");
+                }
+            }
+            logfile.Write("\n");
+
             sensor_readings_collection.Insert(s);
         }
 
@@ -354,6 +420,31 @@ namespace AscensionControl
             {
                 return studies;
             }
+        }
+
+        public void updateTimestamps()
+        {
+            foreach(Study study in GetStudies() ) {
+                foreach (Subject subj in GetSubjects(study))
+                {
+                    foreach (Session sess in GetSessions(subj))
+                    {
+                        foreach (Trial trial in GetTrials(sess))
+                        {
+                            foreach (SensorReading sr in GetSensorReadings(trial))
+                            {
+                                sr.time = sr.sensors[0].time;
+                                sensor_readings_collection.Save(sr);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void updateIndexes()
+        {
+            //this.sensor_readings_collection.EnsureIndex(IndexKeys.Ascending("time"));
         }
     }
 }
